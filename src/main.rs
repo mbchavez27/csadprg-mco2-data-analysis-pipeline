@@ -2,7 +2,13 @@ use csv::Reader;
 use std::error::Error;
 use std::io;
 
-fn load_file() -> Result<(), Box<dyn Error>> {
+struct DataSet {
+    total_rows: i32,
+    filtered_rows: i32,
+    matching_records: Vec<csv::StringRecord>,
+}
+
+fn load_file() -> Result<DataSet, Box<dyn Error>> {
     let mut reader = Reader::from_path("./src/data/dpwh_flood_control_projects.csv")?;
 
     let mut total_rows: i32 = 0;
@@ -37,14 +43,31 @@ fn load_file() -> Result<(), Box<dyn Error>> {
         total_rows, filtered_rows, "2021-2023"
     );
 
-    Ok(())
+    Ok(DataSet {
+        total_rows,
+        filtered_rows,
+        matching_records,
+    })
 }
 
-fn generate_reports() {
-    println!("Generating reports...\n");
+fn generate_reports(data: &Option<DataSet>) {
+    match data {
+        Some(dataset) => {
+            println!(
+                "Generating reports for {} filtered rows out of {} total.\n",
+                dataset.filtered_rows, dataset.total_rows
+            );
+
+            for (i, record) in dataset.matching_records.iter().take(3).enumerate() {
+                println!("Record {}: {:?}", i + 1, record);
+            }
+        }
+        None => println!("No dataset loaded. Please load the file first.\n"),
+    }
 }
 
 fn main() {
+    let mut dataset: Option<DataSet> = None;
     loop {
         let mut input = String::new();
 
@@ -72,12 +95,13 @@ fn main() {
         println!("");
 
         match choice {
-            1 => {
-                if let Err(err) = load_file() {
-                    eprintln!("Error: {}", err);
+            1 => match load_file() {
+                Ok(data) => {
+                    dataset = Some(data);
                 }
-            }
-            2 => generate_reports(),
+                Err(err) => eprintln!("Error: {}\n", err),
+            },
+            2 => generate_reports(&dataset),
             3 => {
                 println!("Exiting Program...");
                 break;

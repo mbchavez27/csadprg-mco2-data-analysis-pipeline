@@ -6,4 +6,5 @@ edition = "2024"
 [dependencies]
 csv = "1"
 chrono = "0.4"
+tabled = "0.16"
 

@@ -5,8 +5,8 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::io::{self, Write};
 
+use services::generate_report::generate_reports;
 use services::loader::{DataSet, load_file};
-use services::reports::{EfficiencyReport, generate_reports};
 
 fn main() {
     let mut dataset: Option<DataSet> = None;

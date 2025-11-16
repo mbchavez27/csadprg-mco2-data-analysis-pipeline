@@ -2,6 +2,7 @@ use crate::services::loader::DataSet;
 use crate::services::reports::report1;
 use crate::services::reports::report2;
 use crate::services::reports::report3;
+use crate::services::reports::summary;
 use std::io::{self, Write};
 
 fn ask_yes_no(prompt: &str) -> bool {
@@ -32,6 +33,9 @@ pub fn generate_reports(data: &Option<DataSet>) {
 
             println!("Report 3: Annual Project Type Cost Overrun Trends");
             report3::generate_report(dataset);
+
+            println!("Summary Stats (summary.json)");
+            summary::generate_summary(dataset);
 
             if ask_yes_no("Back to Report Selection") {
                 break;

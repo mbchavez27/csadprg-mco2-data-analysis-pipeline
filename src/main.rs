@@ -1,9 +1,6 @@
 mod services;
 
-use chrono::NaiveDate;
-use std::collections::HashMap;
-use std::error::Error;
-use std::io::{self, Write};
+use std::io::{self};
 
 use services::generate_report::generate_reports;
 use services::loader::{DataSet, load_file};

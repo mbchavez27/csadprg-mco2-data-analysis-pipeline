@@ -1,6 +1,7 @@
 use csv::Reader;
 use std::error::Error;
 
+#[allow(dead_code)]
 pub struct DataSet {
     pub total_rows: i32,
     pub filtered_rows: i32,
@@ -12,10 +13,8 @@ pub fn load_file() -> Result<DataSet, Box<dyn Error>> {
     //Read the file
     let mut reader = Reader::from_path("data/dpwh_flood_control_projects.csv")?;
 
-
     let mut total_rows: i32 = 0;
     let mut filtered_rows: i32 = 0;
-
 
     //Get the StartDate
     let headers = reader.headers()?.clone();

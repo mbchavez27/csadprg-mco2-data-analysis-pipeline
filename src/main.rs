@@ -6,8 +6,7 @@ use std::error::Error;
 use std::io::{self, Write};
 
 use services::loader::{DataSet, load_file};
-use services::reports::{generate_reports, EfficiencyReport};
-
+use services::reports::{EfficiencyReport, generate_reports};
 
 fn main() {
     let mut dataset: Option<DataSet> = None;

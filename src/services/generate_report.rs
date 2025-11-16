@@ -1,5 +1,6 @@
 use crate::services::loader::DataSet;
 use crate::services::reports::report1;
+use crate::services::reports::report2;
 
 pub fn generate_reports(data: &Option<DataSet>) {
     match data {
@@ -7,10 +8,10 @@ pub fn generate_reports(data: &Option<DataSet>) {
             println!("Report 1: Regional Flood Mitigation Efficiency Summary");
             report1::generate_report(dataset);
 
-            println!("Report 2: <Your second report name here>");
-            report1::generate_report(dataset);
+            println!("Report 2: Top Contractors Performance Ranking");
+            report2::generate_report(dataset);
 
-            println!("Report 3: <Your third report name here>");
+            println!("Report 3: Annual Project Type Cost Overrrun Trends");
             report1::generate_report(dataset);
         }
         None => {

@@ -50,6 +50,10 @@ fn normalize_to_100(value: f64, max_value: f64) -> f64 {
     }
 }
 
+fn round2(value: f64) -> f64 {
+    (value * 100.0).round() / 100.0
+}
+
 // -----------------------------
 // Main Report Generator
 // -----------------------------
@@ -122,28 +126,34 @@ pub fn generate_report(data: &DataSet) {
         rows.push(EfficiencyReportRow {
             main_island,
             region,
-            total_budget,
-            median_savings: med_savings,
-            avg_delay,
-            delayed_over_30_pct: delayed_over_30,
-            efficiency_score: raw_eff_score,
+            total_budget: round2(total_budget),
+            median_savings: round2(med_savings),
+            avg_delay: round2(avg_delay),
+            delayed_over_30_pct: round2(delayed_over_30),
+            efficiency_score: raw_eff_score, // normalized later
         });
     }
 
-    let max_score = efficiency_scores.iter().cloned().fold(0.0 / 0.0, f64::max);
+    let max_score = efficiency_scores
+        .iter()
+        .cloned()
+        .fold(f64::NEG_INFINITY, f64::max);
 
     for row in &mut rows {
-        row.efficiency_score = normalize_to_100(row.efficiency_score, max_score);
+        row.efficiency_score = round2(normalize_to_100(row.efficiency_score, max_score));
     }
+
+    // Sort descending by efficiency_score
+    rows.sort_by(|a, b| b.efficiency_score.partial_cmp(&a.efficiency_score).unwrap());
 
     let table = Table::new(rows.clone());
     println!("{table}");
 
-    let mut wtr = csv::Writer::from_path("efficiency_report.csv").unwrap();
+    let mut wtr = csv::Writer::from_path("report1_regional_summary.csv").unwrap();
     for row in rows {
         wtr.serialize(row).unwrap();
     }
     wtr.flush().unwrap();
 
-    println!("Saved: efficiency_report.csv\n");
+    println!("Full table exported to  report1_regional_summary.csv\n");
 }
